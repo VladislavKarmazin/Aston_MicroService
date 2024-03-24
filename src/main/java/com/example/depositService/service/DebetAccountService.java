@@ -1,9 +1,8 @@
 package com.example.depositService.service;
 
-import com.example.depositService.repository.DebetAccountRepository;
 import com.example.depositService.entity.DebetAccount;
+import com.example.depositService.repository.DebetAccountRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

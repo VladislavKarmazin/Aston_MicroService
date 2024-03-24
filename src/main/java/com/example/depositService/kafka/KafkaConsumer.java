@@ -35,11 +35,15 @@ public class KafkaConsumer {
 
         DebetAccount debetAccount = gson.fromJson(message, DebetAccount.class);
 
-        System.out.println(debetAccount);
-        debetAccountService.createAccount(debetAccount);
+        if (debetAccount.getBalance() == 0) {
+            debetAccountService.createAccount(debetAccount);
+            System.out.println("Создан новый счет: " + debetAccount);
+        } else {
+            debetAccountService.deposit(debetAccount.getUserId(), debetAccount.getBalance());
+            System.out.println("Счет пополнен: " + debetAccount);
+        }
 
         kafkaProducer.sendMessage(CUSTOMER_TOPIC, "Account created: OK");
     }
-
 
 }
