@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: debet_account_table_creation
+      author: Vlad
+      changes:
+        - createTable:
+            tableName: debet_account
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    unique: true
+              - column:
+                  name: balance
+                  type: INTEGER
+        - insert:
+          tableName: debet_account
+          columns:
+            - column:
+              name: user_id
+              value: 10
+            - column:
+              name: balance
+              value: 500
+            - insert:
+              tableName: debet_account
+              columns:
+                - column:
+                  name: user_id
+                  value: 20
+                - column:
+                  name: balance
+                  value: 1000
