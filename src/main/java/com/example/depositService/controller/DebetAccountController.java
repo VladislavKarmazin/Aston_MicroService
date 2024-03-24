@@ -15,15 +15,11 @@ import static com.example.depositService.kafka.KafkaConsumer.TOPIC;
 @RequiredArgsConstructor
 public class DebetAccountController {
 
-    private final KafkaProducer kafkaProducer;
     private final DebetAccountService debetAccountService;
 
     @PostMapping("/create")
     public ResponseEntity<Void> createAccount(@RequestBody DebetAccount debetAccount) {
         debetAccountService.createAccount(debetAccount);
-
-        kafkaProducer.sendMessage(TOPIC, "Account created: " + debetAccount.getUserId());
-
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -32,7 +28,7 @@ public class DebetAccountController {
         debetAccountService.deposit(debetAccount.getUserId(), debetAccount.getBalance());
 
         String message = "Deposit for user " + debetAccount.getUserId() + ": " + debetAccount.getBalance();
-        kafkaProducer.sendMessage(TOPIC, message);
+        //kafkaProducer.sendMessage(TOPIC, message);
 
         return ResponseEntity.ok().build();
     }
