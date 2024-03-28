@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -15,21 +14,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class KafkaConsumer {
 
-
-    @Autowired
-    private final KafkaProducer kafkaProducer;
-    @Autowired
-    private final DebetAccountService debetAccountService;
-
     public static final String TOPIC = "topic_ASTON";
     public static final String GROUP = "group_ASTON";
-
-
     public static final String CUSTOMER_TOPIC = "user_service_debet";
+
+    private final KafkaProducer kafkaProducer;
+    private final DebetAccountService debetAccountService;
 
     @KafkaListener(topics = TOPIC, groupId = GROUP)
     public void listen(String message) {
-        System.out.println("listen сработал " + message);
+        log.info("listen кафки сработал");
 
         Gson gson = new GsonBuilder().create();
 
@@ -37,10 +31,10 @@ public class KafkaConsumer {
 
         if (debetAccount.getBalance() == 0) {
             debetAccountService.createAccount(debetAccount);
-            System.out.println("Создан новый счет: " + debetAccount);
+            log.info("Создан новый счет: " + debetAccount);
         } else {
             debetAccountService.deposit(debetAccount.getUserId(), debetAccount.getBalance());
-            System.out.println("Счет пополнен: " + debetAccount);
+            log.info("Счет пополнен: " + debetAccount);
         }
 
         kafkaProducer.sendMessage(CUSTOMER_TOPIC, "Account created: OK");
